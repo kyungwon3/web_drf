@@ -10,11 +10,20 @@ from rest_framework.views import APIView
 
 
 class ProductViewSet(viewsets.ModelViewSet):
-    # 로그인한 사람만 접근하고 싶게 하고 싶다면...
+    # 로그인한 사람만 접근하고 싶게 하고 싶다면... -> 근데 읽는 건 로그인 없이도 할 수 있게 comission으로 제어
     permission_classes = [IsAuthenticated]
+
 
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
+    def create(self, request):
+        serializer = ReviewSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(seller=request.user)
+            # 위 코드 : authorization에 access token 넣어서 save 해주어야 함. -> 로그인 한 사용자만 저장되게 !
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
     def get_queryset(self):
         qs = super().get_queryset()
