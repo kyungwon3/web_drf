@@ -9,18 +9,18 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
+# from pathlib import Path
+# import os
+# import json
+import os
 from pathlib import Path
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+import json
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
+secret_file = os.path.join(BASE_DIR, 'secret.json')
+with open(secret_file) as f:
+    secrets = json.loads(f.read())
 SECRET_KEY = secrets['SECRET_KEY']
+
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -54,7 +54,7 @@ INSTALLED_APPS = [
 ]
 
 SITE_ID = 1
-
+ACCOUNT_EMAIL_VERIFICATION = None
 
 REST_FRAMEWORK = {
 
@@ -106,7 +106,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-SECRET_KEY = secrets['SECRET_KEY']
+# SECRET_KEY = secrets['SECRET_KEY']
 
 
 DATABASES = {

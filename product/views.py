@@ -1,5 +1,6 @@
 from rest_framework import viewsets,status
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from product.models import Product
 from product.models import Review
@@ -9,6 +10,9 @@ from rest_framework.views import APIView
 
 
 class ProductViewSet(viewsets.ModelViewSet):
+    # 로그인한 사람만 접근하고 싶게 하고 싶다면...
+    permission_classes = [IsAuthenticated]
+
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
