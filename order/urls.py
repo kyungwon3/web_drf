@@ -8,4 +8,5 @@ router.register('order', order.views.OrderViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('order/', order.views.OrderList.as_view()),
 ]

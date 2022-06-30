@@ -1,18 +1,29 @@
 from rest_framework import serializers
+from rest_framework.authtoken.admin import User
+
 from order.models import Order
 from product.models import Product
-from django.contrib.auth.models import User
 from product.serializers import ProductSerializer
-# 가장 기본 형태의 serializer
+from review.serializers import ReviewSerializer
+
+
 class OrderUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields=['username',]
+        fields = ['username', ]
+
 
 class OrderProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['name', 'price', 'seller',]
+        fields = ['name', 'price', 'seller', ]
+
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['seller'] = OrderUserSerializer(instance.seller).data
+
+        return response
+
 
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
@@ -21,6 +32,6 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
-        response['product'] = ProductSerializer(instance.product).data
-        response['order'] = OrderUserSerializer(instance.user).data
+        response['product'] = OrderProductSerializer(instance.product).data
+        response['user'] = OrderUserSerializer(instance.user).data
         return response

@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
-from django.contrib.auth.models import User
+from rest_framework.authtoken.admin import User
 from product.models import Product
 
 class Review(models.Model):
