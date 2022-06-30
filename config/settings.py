@@ -22,12 +22,9 @@ with open(secret_file) as f:
 SECRET_KEY = secrets['SECRET_KEY']
 
 
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -38,8 +35,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 새로 추가된 것들. 순서를 꼭 지켜야하는 것은 아니지만 가끔 구문에서 에러가 뜰 수 있으므로
-    # 참조되는 것은 위에 두는 것이 좋음.
     'django.contrib.sites',
     'rest_framework',
     'rest_framework.authtoken',
@@ -48,34 +43,29 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'dj_rest_auth.registration',
-
-
     'product',
     'review',
     'order',
+    'corsheaders',
 ]
 
 SITE_ID = 1
-ACCOUNT_EMAIL_VERIFICATION = "none"
 
 REST_FRAMEWORK = {
-
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
     )
-
 }
 
 REST_USE_JWT = True
 
-#client에 저장될 이름 ! 같은 느낌 (서버에 저장된 것은 없음)
-#그냥 쿠키는 만료 시간이 아주 짧지만 refresh 쿠키는 만료 시간이 조금 길음.
-# refresh 토큰은 원래 토큰의 만료 시간을 갱신시키기 위한 토큰
-
 JWT_AUTH_COOKIE = 'jwt_token'
 JWT_AUTH_REFRESH_COOKIE = 'jwt_refresh_token'
 
+ACCOUNT_EMAIL_VERIFICATION = "none"
+
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -83,9 +73,15 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 ]
 
+CORS_ORIGIN_WHITELIST = ['http://127.0.0.1:3000', 'http://localhost:3000']
+CORS_ALLOW_CREDENTIALS = True
+
 ROOT_URLCONF = 'config.urls'
+
+
 
 TEMPLATES = [
     {
@@ -105,12 +101,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-# SECRET_KEY = secrets['SECRET_KEY']
-
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -124,7 +116,6 @@ DATABASES = {
         }
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -144,7 +135,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
@@ -156,7 +146,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
@@ -166,3 +155,7 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'

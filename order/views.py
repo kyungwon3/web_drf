@@ -11,10 +11,19 @@ class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
+
 class OrderList(APIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
     permission_classes = [IsAuthenticated]
-    def get(self,request,pid):
-        if request.user == order.user:
-            qs = Order.objects.all()
-            serializer = OrderSerializer(qs, many=True)
-            return Response(serializer.data)
+
+    def get_qeury(self):
+        qs = suepr().get.queryset()
+        qs = qs.filter(user=self.request.user)
+        return qs
+    #
+    # def get(self,request,pid):
+    #     if request.user == order.user:
+    #         qs = Order.objects.all()
+    #         serializer = OrderSerializer(qs, many=True)
+    #         return Response(serializer.data)

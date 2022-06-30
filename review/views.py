@@ -1,3 +1,4 @@
+
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -17,19 +18,23 @@ from review.serializers import ReviewSerializer
 #             qs = qs.filter(name__icontains=search_name)
 #
 #         return qs
-
 class ReviewList(APIView):
-    def get(self,request,pid):
+    def get(self, request):
+        qs = Review.objects.all()
+        serializer = ReviewSerializer(qs, many=True)
+        return Response(serializer.data)
+
+    def get(self, request):
         qs = Review.objects.all()
         serializer = ReviewSerializer(qs, many=True)
         return Response(serializer.data)
 
     def post(self, request, pid):
-        serializer = ReviewSerializer(data=request.data, many=True)
+        serializer = ReviewSerializer(data=request.data, many=False)
+
         if serializer.is_valid():
             product = Product()
             product.id = pid
-            # id을 pid로 받아서 url에서 이용 !!
             serializer.save(writer=request.user, product=product)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
