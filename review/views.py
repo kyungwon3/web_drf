@@ -19,15 +19,18 @@ from review.serializers import ReviewSerializer
 #         return qs
 
 class ReviewList(APIView):
-    def get(self, request):
+    def get(self,request,pid):
         qs = Review.objects.all()
         serializer = ReviewSerializer(qs, many=True)
         return Response(serializer.data)
 
-    def post(self, request):
+    def post(self, request, pid):
         serializer = ReviewSerializer(data=request.data, many=True)
         if serializer.is_valid():
-            serializer.save()
+            product = Product()
+            product.id = pid
+            # id을 pid로 받아서 url에서 이용 !!
+            serializer.save(writer=request.user, product=product)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -35,20 +38,20 @@ class ReviewList(APIView):
 
 
 class ReviewDetail(APIView):
-    def get(self, request, pk):
-        qs = Review.objects.get(id=pk)
+    def get(self, request,  pid, rid):
+        qs = Review.objects.get(id=rid)
         serializer = ReviewSerializer(qs, many=False)
         return Response(serializer.data)
 
-    def patch(self, request, pk):
-        qs = Review.objects.get(id=pk)
+    def patch(self, request,pid, rid):
+        qs = Review.objects.get(id=rid)
         serializer = ReviewSerializer(qs, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk):
-        qs = Review.objects.get(id=pk)
+    def delete(self, request,pid, rid):
+        qs = Review.objects.get(id=rid)
         qs.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
