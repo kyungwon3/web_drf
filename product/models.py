@@ -1,5 +1,4 @@
 from django.db import models
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import User
 # Create your models here.
 class Product(models.Model):
@@ -7,11 +6,4 @@ class Product(models.Model):
     description = models.TextField()
     price = models.IntegerField()
     create_at = models.DateTimeField(auto_now_add=True)
-    seller = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-
-class Review(models.Model):
-    contents = models.TextField()
-    score = models.IntegerField(
-        validators=[MinValueValidator(0),
-                   MaxValueValidator(5)])
-    create_date = models.DateTimeField(auto_now_add=True)
+    seller = models.ForeignKey(User, on_delete=models.CASCADE)

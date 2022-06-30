@@ -51,10 +51,11 @@ INSTALLED_APPS = [
 
 
     'product',
+    'review',
 ]
 
 SITE_ID = 1
-ACCOUNT_EMAIL_VERIFICATION = None
+ACCOUNT_EMAIL_VERIFICATION = "none"
 
 REST_FRAMEWORK = {
 
